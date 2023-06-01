@@ -1,5 +1,6 @@
 {
   "scripts": {
+    "dev": "live-server",
     "test": "jest --coverage --noStackTrace --silent"
   },
   "jest": {
