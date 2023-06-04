@@ -3,6 +3,7 @@
  */
 
 import {screen, waitFor} from "@testing-library/dom"
+import '@testing-library/jest-dom/extend-expect';
 import BillsUI from "../views/BillsUI.js"
 import { bills } from "../fixtures/bills.js"
 import { ROUTES_PATH} from "../constants/routes.js";
