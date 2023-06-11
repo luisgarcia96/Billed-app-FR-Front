@@ -2,8 +2,8 @@
  * @jest-environment jsdom
  */
 
-import {screen, waitFor} from "@testing-library/dom"
 import '@testing-library/jest-dom/extend-expect';
+import {screen, waitFor, fireEvent} from "@testing-library/dom"
 import BillsUI from "../views/BillsUI.js"
 import { bills } from "../fixtures/bills.js"
 import { ROUTES_PATH} from "../constants/routes.js";
@@ -36,5 +36,33 @@ describe("Given I am connected as an employee", () => {
       const datesSorted = [...dates].sort(antiChrono)
       expect(dates).toEqual(datesSorted)
     })
+    test("should navigate to the NewBill route when the new bill button is clicked", async ()=> {
+      //We simulate the login of an employee
+      Object.defineProperty(window, 'localStorage', { value: localStorageMock })
+      Object.defineProperty(window, 'fetch', ()=>{})
+      window.localStorage.setItem('user', JSON.stringify({
+        type: 'Employee'
+      }))
+
+      //We create the root element that will contain all the UI of our application
+      const root = document.createElement("div")
+      root.setAttribute("id", "root")
+      document.body.append(root)
+
+      //We activate the router function
+      router()
+
+      //We navigate to the bills dashboard
+      window.onNavigate(ROUTES_PATH.Bills)
+
+      //We wait for out button to appear
+      await waitFor(() => screen.getByTestId('btn-new-bill'))
+      const newBillButton = screen.getByTestId('btn-new-bill')
+
+      //Check the rout after clicking
+      fireEvent.click(newBillButton);
+      expect(window.location.href).toContain(ROUTES_PATH.NewBill);
+    })
+    
   })
 })
