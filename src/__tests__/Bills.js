@@ -5,6 +5,7 @@
 import '@testing-library/jest-dom/extend-expect';
 import {screen, waitFor, fireEvent} from "@testing-library/dom"
 import BillsUI from "../views/BillsUI.js"
+import { handleClickIconEye } from '../containers/Bills.js';
 import { bills } from "../fixtures/bills.js"
 import { ROUTES_PATH} from "../constants/routes.js";
 import {localStorageMock} from "../__mocks__/localStorage.js";
@@ -63,6 +64,42 @@ describe("Given I am connected as an employee", () => {
       fireEvent.click(newBillButton);
       expect(window.location.href).toContain(ROUTES_PATH.NewBill);
     })
+    test("Then clicking the eye icon should display the modal with the bill image", async () => {
+        //We simulate the login of an employee
+        Object.defineProperty(window, 'localStorage', { value: localStorageMock })
+        Object.defineProperty(window, 'fetch', ()=>{})
+        window.localStorage.setItem('user', JSON.stringify({
+          type: 'Employee'
+        }))
+  
+        //We create the root element that will contain all the UI of our application
+        const root = document.createElement("div")
+        root.setAttribute("id", "root")
+        document.body.append(root)
+  
+        //We activate the router function
+        router()
+  
+        //We navigate to the bills dashboard
+        window.onNavigate(ROUTES_PATH.Bills)
+
+      // Mock the necessary elements and data
+      document.body.innerHTML = BillsUI({ data: bills });
+
+      //Get the eye icon 
+      await waitFor(() => {screen.getAllByTestId('icon-eye')[0]});
+      const eyeIcon = screen.getAllByTestId('icon-eye')[0];
+
+      //@Guillaume help please
+    
+      // Trigger the click event on the icon
+      // fireEvent.click(eyeIcon);
+    
+      // Wait for the modal to be displayed
+      // await waitFor(() => screen.getByTestId("modaleFile"));
+      // const modal = screen.getByTestId("modaleFile")
+
+    });
     
   })
 })
