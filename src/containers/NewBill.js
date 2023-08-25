@@ -17,6 +17,14 @@ export default class NewBill {
   }
   handleChangeFile = e => {
     e.preventDefault();
+    const errorDiv = this.document.querySelector(`div[data-testid="file-error"]`);
+
+    //remove error message if displayed
+    if (errorDiv.classList.contains('active')) {
+      errorDiv.classList.remove('active');
+    }
+    
+
     const fileInput = this.document.querySelector(`input[data-testid="file"]`);
     const file = fileInput.files[0];
   
@@ -31,10 +39,15 @@ export default class NewBill {
   
     // Define the allowed file extensions
     const allowedExtensions = ['jpeg', 'jpg', 'png'];
+
   
     // Check if the file extension is allowed
     if (!allowedExtensions.includes(fileExtension)) {
       console.error('Invalid file type. Please upload a jpeg, jpg, or png file.');
+
+      // Display the error message
+      errorDiv.classList.add('active');
+
       // Clear the file input field
       fileInput.value = '';
       return;
